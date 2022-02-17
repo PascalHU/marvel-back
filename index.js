@@ -19,6 +19,8 @@ const charactersRoute = require("./routes/characters");
 app.use(charactersRoute);
 const comicsRoute = require("./routes/comics");
 app.use(comicsRoute);
+const userRoute = require("./routes/user");
+app.use(userRoute);
 
 app.listen(process.env.PORT, () => {
   console.log("Server Started 🚀🤯");
