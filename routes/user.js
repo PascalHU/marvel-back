@@ -7,7 +7,22 @@ const User = require("../models/User");
 
 router.post("/login", async (req, res) => {
   try {
-    console.log(req.fields);
+    const checkEmail = await User.findOne({ email: req.fields.email });
+    if (checkEmail) {
+      const password = SHA256(req.fields.password + checkEmail.salt).toString(
+        encBase64
+      );
+      if (password === checkEmail.hash) {
+        const result = await User.findOne({ email: req.fields.email }).select(
+          "_id token favorites"
+        );
+        res.json(result);
+      } else {
+        res.status(400).json({ error: { message: "Incorrect password" } });
+      }
+    } else {
+      res.status(400).json({ error: { message: "Email not exist" } });
+    }
   } catch (error) {
     res.status(400).json(error.response);
   }
@@ -25,9 +40,13 @@ router.post("/signup", async (req, res) => {
         email: req.fields.email,
         account: {
           username: req.fields.username,
-          token: uid2(16),
-          hash: hash,
-          salt: salt,
+        },
+        token: uid2(16),
+        hash: hash,
+        salt: salt,
+        favorites: {
+          character: {},
+          comic: {},
         },
       });
       await newUser.save();

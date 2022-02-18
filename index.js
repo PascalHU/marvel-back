@@ -21,7 +21,8 @@ const comicsRoute = require("./routes/comics");
 app.use(comicsRoute);
 const userRoute = require("./routes/user");
 app.use(userRoute);
-
+const favoritesRoute = require("./routes/favorites");
+app.use(favoritesRoute);
 app.listen(process.env.PORT, () => {
   console.log("Server Started 🚀🤯");
 });
